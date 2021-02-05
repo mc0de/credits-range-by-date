@@ -9,22 +9,12 @@ class Credit extends Model
 {
     use HasFactory;
 
-    public function scopeValidSince($query, string $from)
+    public function scopeValidForRange($query, array $range = [])
     {
-        return $query->where('from', '>=', $from);
+        return $query->whereBetween('from', $range)->orWhereBetween('to', $range);
     }
 
-    public function scopeValidUntil($query, string $to)
-    {
-        return $query->where('to', '<=', $to);
-    }
-
-    public function scopeValidBetween($query, array $range = [])
-    {
-        return $query->validSince(reset($range))->validUntil(end($range));
-    }
-
-    public function scopeValidInBetween($query, string $date)
+    public function scopeValidForDate($query, string $date)
     {
         return $query->where('from', '<=', $date)->where('to', '>=', $date);
     }
